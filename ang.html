@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+		<link rel="stylesheet" href="style.css" />
+		<script>
+			var myApp = angular.module('app',[]);
+ 
+			myApp.controller('ctrl', function($scope){
+				$scope.map=[['','',''],['','',''],['','','']];
+				$scope.mapSize=3;
+				$scope.isP1=true;
+				$scope.endGame=false;
+				$scope.endGameMessage="";
+				$scope.rowClicked=0;
+				$scope.colClicked=0;
+				$scope.turnPlayed=0;
+				$scope.score1=0;
+				$scope.score2=0;
+				$scope.scoreT1=0;
+				$scope.scoreT2=0;
+				$scope.nbparti=0;
+				$scope.reset = function(){
+					$scope.map=[['','',''],['','',''],['','','']];
+					$scope.endGameMessage="";
+					$scope.turnPlayed=0;
+					$scope.score1=0;
+				$scope.score2=0;
+				};
+				$scope.reset();
+				$scope.setMap=function(s){
+					if(s>=3){
+						$scope.mapSize=s;
+						$scope.map=[]
+						for(i=0;i<$scope.mapSize;i++){
+							t=[]
+							for(j=0;j<$scope.mapSize;j++){
+								t.push('');
+							}
+							$scope.map.push(t);
+						}
+					}					
+				};
+				$scope.countTurn=function(){
+					$scope.turnPlayed++;
+				};
+				$scope.changeCol=function(val){
+					$scope.colClicked=val;
+				};
+				$scope.changeRow=function(val){
+					$scope.rowClicked=val;
+				};
+				$scope.changePlayer=function(car){
+					r=car
+					if(car==''&&!$scope.endGame){
+						if($scope.isP1){
+							r= 'x';
+						}else{
+							r='o';
+						}
+					}
+					$scope.isP1=!$scope.isP1;
+					//mise à jour de la colone cliquée
+					$scope.map[$scope.rowClicked][$scope.colClicked]=r;
+					return r;
+				};
+				$scope.checkIfWon=function(){
+					winner=testWin()
+					end=$scope.turnPlayed==$scope.mapSize*$scope.mapSize;
+					$scope.endGame=winner||end;
+					if(winner && $scope.endGameMessage==""){
+						if($scope.isP1){
+							$scope.endGameMessage="o wins";
+							$scope.score1=1;
+							$scope.scoreT1+=1;
+							$scope.nbparti+=1;
+						}else{
+							$scope.endGameMessage="x wins";
+							$scope.score2=1;
+							$scope.scoreT2+=1;
+							$scope.nbparti+=1;
+						}
+					}
+					if(end && $scope.endGameMessage==""){
+						$scope.endGameMessage="Fin du jeu";
+					}
+				};
+				function testWin(){
+					l=$scope.map.length;
+					//on vérifie si une des lignes ou colones à des valeurs identiques
+					for(i=0;i<l;i++){
+						val=$scope.map[i][0]; //première valeur de la ligne
+						j=1;
+						while(val!=''&& j<l&&val==$scope.map[i][j] ){
+							j++;
+						}
+						//toute la ligne est identique si on a parcouru l'ensemble de la ligne
+						if(j==l){
+							return true;
+						}
+						val=$scope.map[0][i];//première valeur de la colone
+						j=1;
+						while(val!=''&& j<l&&val==$scope.map[j][i] ){
+							j++;
+						}
+						//toute la colone est identique si on a parcouru l'ensemble de la colone
+						if(j==l){
+							return true;
+						}
+					}
+					//on vérifie si les valeurs de la première diagonale sont identiques
+					val=$scope.map[0][0];
+					i=1;
+					while(val!=''&&i<l&&val==$scope.map[i][i] ){
+						i++;
+					}
+					if(i==l){
+						return true;
+					}
+					//on vérifie si les valeurs de la deuxième diagonale sont identiques
+					val=$scope.map[0][l-1];
+					i=1;
+					while(val!=''&&i<l&&val==$scope.map[i][l-i-1]){
+						i++;
+					}
+					if(i==l){
+						return true;
+					}
+					return false;
+				}
+				
+			});
+		</script>
+	</head>
+	<body ng-app="app" ng-controller="ctrl" >
+		<input ng-model="size" ng-change="setMap(size)" ng-init="size=3"><br>
+			  
+			  <br><br>
+		<table border='1' width=50%>  
+				<tr> 
+				<tr ><td colspan="2" style="text-align:center"> Score </td></tr>
+					<th >joueur1 "o"</th><th >joueur2 "x"</th>
+				</tr>
+				 <tr > <td>{{score1 }}</td><td>{{score2 }}</td>
+				</tr>
+			  
+			</table>
+			<br>
+			  <br><br>
+		<table id= "jeu" border="1" > 
+			<tr ng-repeat="ligne in map" ng-mouseover="changeRow($index);">
+				<td width="50px" height="50px" style="text-align:center" ng-repeat="cell in ligne track by $index" ng-click="changeCol($index);cell=changePlayer(cell);countTurn();checkIfWon()" >{{cell}}</td>
+			</tr>
+		</table>
+		<button  
+        type="reset" ng-click="reset()">Clear</button>
+		<p ng-show="endGame">{{endGameMessage}}</p>
+		<br><br>
+		<table border='1' width=50%>  
+				<tr> 
+				<tr ><td colspan="2" style="text-align:center"> Score Total </td></tr>
+				<td colspan="2" style="text-align:center"> Nombre de Parties jouer : {{nbparti}} </td></tr>
+					<th >joueur1   "O"</th><th >joueur2  "x"</th>
+				</tr>
+				 <tr > <td>{{scoreT1 }}</td><td>{{scoreT2 }}</td>
+				</tr>
+			  
+			</table>
+		
+	</body>
+</html>
+
+
+
+
+
+
+

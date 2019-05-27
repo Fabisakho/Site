@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Les balises HTML </title>
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+			<script src="rev.js"> </script>
+			<style>
+				 table, th, td{
+				  border: 1px solid black;
+				  border-collapse : collapse;
+				 }
+			</style>		
+		</head>
+		<body ng-app= "myApp" ng-controller="exp" align= "center"> 
+			<h2> Inscriptions des membres</h2> 
+			<div ng-init="Enregistrement=[
+			{nom: 'Bernard', prenom: valerie},
+			{nom: 'Dupond', prenom: Albert},
+			{nom: 'Durand', prenom: Leon},
+			{nom: 'Ragout',  prenom: Martine},
+			{nom: 'saulvit',  prenom: Paul}]">
+			
+			</div>
+			
+			<form ng-submit="ajouter(nom,prenom, age, sexe, role)">
+			   Nom:<br>
+				<input type="text" name="nom" ng-model="nom" ><br>
+				Prenom:<br>
+				<input type="text" name="prenom" ng-model="prenom" ><br>
+				Âge:<br>
+				<input type="number" name="age" ng-model="age" ><br>
+				Sexe
+				<select name="sexe" size="1" ng-model="sexe"><option value="M" >M</option>	<option value="F"> F</option></select>
+				<div ng-show="printWarning">Attention vous devez remplir tous les champs</div>
+				Rôle:<input type="radio" value="Actif" ng-model="role" />Actif <input type="radio" value="Membre" ng-model="role" /> Membre
+				<br><br>
+				<button type= "submit" name="ajouter" >ajouter</button>
+			</form>
+			  <br>
+			  <br><br>
+			  <p>Personnes</p>
+			<table border='1' width=100%>  
+				<tr> 
+					<th>Nom</th><th>Prenom</th><th>Age</th><th>Sexe</th><th>Rôle</th>
+				</tr>
+				<tr ng-repeat = "element in personnes"><td>{{element.nom}}</td><td>{{element.prenom}}	
+					</td><td>{{element.age}}</td><td>{{element.sexe}}</td><td>{{element.role}}</td>
+				</tr>
+			  
+			</table>
+			<br>
+			  <br><br>
+			  <p>Tableau Filtré</p>
+			<table border='1' width=100%>  
+				<tr> 
+					<th>Nom</th><th>Prenom</th><th>Age</th><th>Sexe</th><th>Rôle</th>
+				</tr>
+				<tr ng-repeat = "element in personnesFiltres"><td>{{element.nom}}</td><td>{{element.prenom}}	
+					</td><td>{{element.age}}</td><td>{{element.sexe}}</td><td>{{element.role}}</td>
+				</tr>
+			  
+			</table>
+			<br>
+			  <br><br>
+			
+			
+		<form>
+			Nom:
+				<input type="text" placeholder="Nom" ng-show="!filtreParNom" name="filtreNom" ng-model="filtreNom" ng-change="filtreLeNom(filtreNom)"><br>
+			Age:
+				<input type="number" placeholder="" ng-show="!filtreParNom" name="filtreAge" ng-model="filtreAge" ng-change="filtreLAge(filtreAge)"><br>
+			Sexe:
+			     <select name="filtreSexe" size="1" ng-model="filtreSexe" placeholder="" ng-show="!filtreParNom" ng-change="filtreLeSexe(filtreSexe)"><option value="M" >M</option>	<option value="F"> F</option></select>
+			
+			Categories:
+				<input type="radio"   name="parNom" ng-click="filtreParNom=true" ng-model="filtre" value="parNom">par nom</input><br>
+				<input type="radio"   name="parAge" ng-click="filtreParNom=false" ng-model="filtre" value="parAge" ng-checked='true'/>par age</input>
+				<input type="radio"   name="parSexe" ng-click="filtreParNom=false" ng-model="filtre" value="parSexe" />par sexe</input>
+			</form>	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</body> 
+	<html>	
